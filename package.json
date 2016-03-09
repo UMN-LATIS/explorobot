@@ -29,6 +29,8 @@
   "author": "LATIS",
   "dependencies": {
     "jquery": "^2.2.1",
-    "three": "^0.74.0"
+    "promise-polyfill": "^3.1.0",
+    "three": "^0.74.0",
+    "webvr-polyfill": "^0.2.7"
   }
 }
