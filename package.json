@@ -1,0 +1,16 @@
+{
+  "name": "explorobot",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "css-loader": "^0.23.1",
+    "style-loader": "^0.13.0",
+    "three": "^0.74.0"
+  }
+}
