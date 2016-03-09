@@ -2,7 +2,7 @@
   "name": "explorobot",
   "version": "0.0.1",
   "description": "VeeeeR",
-  "repository": "http://github.com/cmcfadden/explorobot"
+  "repository": "http://github.com/cmcfadden/explorobot",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
