@@ -26,5 +26,9 @@
     "type": "git",
     "url": "http://github.com/cmcfadden/explorobot.git"
   },
-  "author": "LATIS"
+  "author": "LATIS",
+  "dependencies": {
+    "jquery": "^2.2.1",
+    "three": "^0.74.0"
+  }
 }

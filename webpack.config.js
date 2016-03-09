@@ -3,7 +3,7 @@ var UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
 var path = require('path');
 var env = require('yargs').argv.mode;
 
-var libraryName = 'explorobot';
+var libraryName = 'Explorobot';
 
 var plugins = [], outputFile;
 

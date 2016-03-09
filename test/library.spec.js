@@ -1,5 +1,5 @@
 import chai from 'chai';
-import Explorobt from '../lib/explorobot.js';
+import Explorobot from '../lib/explorobot.js';
 
 chai.expect();
 
