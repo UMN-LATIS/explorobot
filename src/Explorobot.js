@@ -1,3 +1,8 @@
+var THREE = require('three');
+var webvrpoly = require('webvr-polyfill');
+
+require('webvr-boilerplate');
+
 var ExploroSphere = require("./ExploroSphere.js");
 
 
@@ -8,7 +13,7 @@ export default class Explorobot {
 		this._initialScene = null;
 		var sphere = new ExploroSphere();
 
-		this.setupVR($("body"));
+		this.setupVR($("body").get(0)); // this is pointless ATM because webvrmanager forces full window
 
 		if(typeof config !== 'undefined') {
 			if (config.source && typeof config.source === 'string') {
@@ -25,8 +30,8 @@ export default class Explorobot {
 	}
 
 	startScene() {
-		console.log('start');
-		this.loadSphere(1);
+		var sphere = this.loadSphere(1);
+		this._scene.add(sphere);
 	}
 
 	loadSphere(sphereId) {
@@ -36,9 +41,9 @@ export default class Explorobot {
 
 	setupVR(targetElement) {
 
-		var width  = targetElement.width,
-		height = targetElement.height;
-		var scene = new THREE.Scene();
+		var width  = window.width,
+		height = window.height;
+		this._scene = new THREE.Scene();
 		var camera = new THREE.PerspectiveCamera(75, width / height, 0.3, 1000);
 		var reticle = vreticle.Reticle(camera);
 
@@ -47,6 +52,7 @@ export default class Explorobot {
 		var renderer = new THREE.WebGLRenderer({antialias: true});
 		renderer.setPixelRatio(window.devicePixelRatio);
 
+		renderer.setSize(width, height, true);
 
 		// Apply VR stereo rendering to renderer.
 		var effect = new THREE.VREffect(renderer);
@@ -62,12 +68,12 @@ export default class Explorobot {
 		var controls = new THREE.VRControls(camera);
 		targetElement.appendChild(renderer.domElement);
 
-		function animate(timestamp) {
+		var animate = (timestamp) => {
 			controls.update();
-			manager.render(scene, camera, timestamp);
+			manager.render(this._scene, camera, timestamp);
 			reticle.reticle_loop();
 			requestAnimationFrame(animate);
-		}
+		};
 		animate();
 		function onMouseWheel(event) {
 			event.preventDefault();
