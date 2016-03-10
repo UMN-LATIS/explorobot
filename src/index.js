@@ -1,7 +1,11 @@
 var $ = require('jquery');
-var THREE = require('three');
-var webvrpoly = require('webvr-polyfill');
 
 var Explorobot = require("./Explorobot");
+
+window.degree2radian = function(degrees) {
+	return degrees*(Math.PI/180);
+};
+
+
 
 module.exports = Explorobot;

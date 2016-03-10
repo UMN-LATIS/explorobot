@@ -6,8 +6,6 @@ require('webvr-boilerplate');
 
 var ExploroSphere = require("./ExploroSphere.js");
 
-
-
 export default class Explorobot {
 	constructor(config) {
 		this._sceneDefinition = null;
@@ -66,7 +64,9 @@ export default class Explorobot {
 		this._camera = new THREE.PerspectiveCamera(75, width / height, 0.3, 1000);
 		this._reticle = vreticle.Reticle(this._camera);
 
-		this._camera.position.x = 0.1;
+		this._camera.position.x = 0;
+		this._camera.position.y = 0;
+		this._camera.position.z = 0;
 
 		this._renderer = new THREE.WebGLRenderer({antialias: true});
 		this._renderer.setPixelRatio(window.devicePixelRatio);
@@ -114,8 +114,7 @@ export default class Explorobot {
 		}
 		document.addEventListener('mousewheel', onMouseWheel, false);
 		document.addEventListener('DOMMouseScroll', onMouseWheel, false);
-
-		document.addEventListener('click', this.switchScenes.bind(this), false);
+		// document.addEventListener('click', this.switchScenes.bind(this), false);
 
 	}
 
