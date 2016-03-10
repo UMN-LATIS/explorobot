@@ -1,5 +1,6 @@
 var THREE = require('three');
 var webvrpoly = require('webvr-polyfill');
+var TWEEN = require('TWEEN');
 
 require('webvr-boilerplate');
 
@@ -11,9 +12,9 @@ export default class Explorobot {
 	constructor(config) {
 		this._sceneDefinition = null;
 		this._initialScene = null;
-		var sphere = new ExploroSphere();
 
 		this.setupVR($("body").get(0)); // this is pointless ATM because webvrmanager forces full window
+		this.registerControls();
 
 		if(typeof config !== 'undefined') {
 			if (config.source && typeof config.source === 'string') {
@@ -27,16 +28,34 @@ export default class Explorobot {
 			}
 
 		}
+
 	}
 
 	startScene() {
-		var sphere = this.loadSphere(1);
-		this._scene.add(sphere);
+		var object = this.loadPosition('R0010149.JPG');
+		this.currentTarget = object;
+
+		this.currentTarget.addToScene(this._scene);
+
 	}
 
-	loadSphere(sphereId) {
-		var newSphere = new ExploroSphere({"config":"Details"});
-		return newSphere;
+	loadPosition(sphereId) {
+		var target = new ExploroSphere(sphereId);
+		return target;
+	}
+
+	switchScenes(targetScene) {
+
+		var newSphere = this.loadPosition('R0010152.JPG');
+		var oldSphere = this.currentTarget;
+
+		newSphere.setOpacity(0, false);
+		newSphere.addToScene(this._scene);
+
+		oldSphere.setOpacity(0, true, function() { oldSphere.removeFromScene(this._scene)}.bind(this));
+		newSphere.setOpacity(1);
+
+		this.currentTarget = newSphere;
 	}
 
 	setupVR(targetElement) {
@@ -44,18 +63,18 @@ export default class Explorobot {
 		var width  = window.width,
 		height = window.height;
 		this._scene = new THREE.Scene();
-		var camera = new THREE.PerspectiveCamera(75, width / height, 0.3, 1000);
-		var reticle = vreticle.Reticle(camera);
+		this._camera = new THREE.PerspectiveCamera(75, width / height, 0.3, 1000);
+		this._reticle = vreticle.Reticle(this._camera);
 
-		camera.position.x = 0.1;
+		this._camera.position.x = 0.1;
 
-		var renderer = new THREE.WebGLRenderer({antialias: true});
-		renderer.setPixelRatio(window.devicePixelRatio);
+		this._renderer = new THREE.WebGLRenderer({antialias: true});
+		this._renderer.setPixelRatio(window.devicePixelRatio);
 
-		renderer.setSize(width, height, true);
+		this._renderer.setSize(width, height, true);
 
 		// Apply VR stereo rendering to renderer.
-		var effect = new THREE.VREffect(renderer);
+		var effect = new THREE.VREffect(this._renderer);
 		effect.setSize(width, height);
 
 		// Create a VR manager helper to enter and exit VR mode.
@@ -63,33 +82,41 @@ export default class Explorobot {
 			hideButton: false, // Default: false.
 			isUndistorted: false // Default: false.
 		};
-		var manager = new WebVRManager(renderer, effect, params);
+		var manager = new WebVRManager(this._renderer, effect, params);
 
-		var controls = new THREE.VRControls(camera);
-		targetElement.appendChild(renderer.domElement);
+		var controls = new THREE.VRControls(this._camera);
+		targetElement.appendChild(this._renderer.domElement);
 
 		var animate = (timestamp) => {
 			controls.update();
-			manager.render(this._scene, camera, timestamp);
-			reticle.reticle_loop();
+			manager.render(this._scene, this._camera, timestamp);
+			this._reticle.reticle_loop();
 			requestAnimationFrame(animate);
+			TWEEN.update();
 		};
 		animate();
-		function onMouseWheel(event) {
+
+	}
+
+	registerControls() {
+		var onMouseWheel = (event) => {
 			event.preventDefault();
 
 			if (event.wheelDeltaY) { // WebKit
-				camera.fov -= event.wheelDeltaY * 0.05;
+				this._camera.fov -= event.wheelDeltaY * 0.05;
 			} else if (event.wheelDelta) {  // Opera / IE9
-				camera.fov -= event.wheelDelta * 0.05;
+				this._camera.fov -= event.wheelDelta * 0.05;
 			} else if (event.detail) { // Firefox
-				camera.fov += event.detail * 1.0;
+				this._camera.fov += event.detail * 1.0;
 			}
-			camera.fov = Math.max(40, Math.min(100, camera.fov));
-			camera.updateProjectionMatrix();
+			this._camera.fov = Math.max(40, Math.min(100, this._camera.fov));
+			this._camera.updateProjectionMatrix();
 		}
 		document.addEventListener('mousewheel', onMouseWheel, false);
 		document.addEventListener('DOMMouseScroll', onMouseWheel, false);
+
+		document.addEventListener('click', this.switchScenes.bind(this), false);
+
 	}
 
 }
