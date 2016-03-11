@@ -1,4 +1,5 @@
 var THREE = require('three');
+
 var webvrpoly = require('webvr-polyfill');
 var TWEEN = require('TWEEN');
 
@@ -34,6 +35,7 @@ export default class Explorobot {
 		this.currentTarget = object;
 
 		this.currentTarget.addToScene(this._scene);
+		this.updateControls();
 
 	}
 
@@ -42,7 +44,11 @@ export default class Explorobot {
 		return target;
 	}
 
-	switchScenes(targetScene) {
+	switchScenes(targetScene=null) {
+		console.log(targetScene);
+		if(targetScene === null) {
+			console.log(this._reticle.gazing_object);
+		}
 
 		var newSphere = this.loadPosition('R0010152.JPG');
 		var oldSphere = this.currentTarget;
@@ -53,7 +59,9 @@ export default class Explorobot {
 		oldSphere.setOpacity(0, true, function() { oldSphere.removeFromScene(this._scene)}.bind(this));
 		newSphere.setOpacity(1);
 
+		this.previousTarget = this.currentTarget;
 		this.currentTarget = newSphere;
+		this.updateControls();
 	}
 
 	setupVR(targetElement) {
@@ -98,6 +106,22 @@ export default class Explorobot {
 
 	}
 
+	updateControls() {
+
+		var eventsHandler  = new THREEx.DomEvents(this._camera, this._renderer.domElement)
+
+		this.currentTarget.objects.forEach(function(value) {
+			this._reticle.add_collider(value);
+			eventsHandler.addEventListener(value, 'click', function(e) {
+				console.log(e);
+				this.switchScenes();
+			}.bind(this));
+
+		}, this);
+
+
+	}
+
 	registerControls() {
 		var onMouseWheel = (event) => {
 			event.preventDefault();
@@ -114,7 +138,7 @@ export default class Explorobot {
 		}
 		document.addEventListener('mousewheel', onMouseWheel, false);
 		document.addEventListener('DOMMouseScroll', onMouseWheel, false);
-		// document.addEventListener('click', this.switchScenes.bind(this), false);
+		document.addEventListener('touchstart', function(e) {this.switchScenes(); }.bind(this), false);
 
 	}
 
