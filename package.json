@@ -34,6 +34,7 @@
     "threex": "^1.0.0",
     "threex.domevents": "^1.0.1",
     "tween": "^0.9.0",
+    "tween.js": "^16.3.4",
     "webvr-boilerplate": "^0.3.8",
     "webvr-polyfill": "^0.2.7"
   }

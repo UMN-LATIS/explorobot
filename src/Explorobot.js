@@ -1,7 +1,7 @@
 var THREE = require('three');
 
 var webvrpoly = require('webvr-polyfill');
-var TWEEN = require('TWEEN');
+var TWEEN = require('tween.js');
 
 require('webvr-boilerplate');
 
@@ -38,7 +38,7 @@ export default class Explorobot {
 
 		var startScene = this._sceneDefinition[this._initialScene];
 
-		var object = this.loadPosition(startScene.image);
+		var object = this.loadPosition(startScene);
 		this.currentTarget = object;
 
 		this.currentTarget.addToScene(this._scene);
@@ -51,15 +51,11 @@ export default class Explorobot {
 		return target;
 	}
 
-	switchScenes(targetScene=null) {
-		console.log(targetScene);
-		if(targetScene === null) {
-			console.log(this._reticle.gazing_object);
-		}
-		console.log(this._sceneDefinition);
-		var startScene = this._sceneDefinition['bunkhouse-2'];
+	switchScenes(targetScene = null) {
 
-		var newSphere = this.loadPosition(startScene.image);
+		var startScene = this._sceneDefinition[targetScene];
+
+		var newSphere = this.loadPosition(startScene);
 		var oldSphere = this.currentTarget;
 
 		newSphere.setOpacity(0, false);
@@ -81,9 +77,6 @@ export default class Explorobot {
 		this._camera = new THREE.PerspectiveCamera(75, width / height, 0.3, 1000);
 		this._reticle = vreticle.Reticle(this._camera);
 
-		this._camera.position.x = 0;
-		this._camera.position.y = 0;
-		this._camera.position.z = 0;
 
 		this._renderer = new THREE.WebGLRenderer({antialias: true});
 		this._renderer.setPixelRatio(window.devicePixelRatio);
@@ -122,8 +115,9 @@ export default class Explorobot {
 		this.currentTarget.objects.forEach(function(value) {
 			this._reticle.add_collider(value);
 			eventsHandler.addEventListener(value, 'click', function(e) {
-				console.log(e);
-				this.switchScenes();
+				var targetMesh = e.target;
+				var targetScene = targetMesh.target;
+				this.switchScenes(targetScene);
 			}.bind(this));
 
 		}, this);
@@ -147,7 +141,13 @@ export default class Explorobot {
 		}
 		document.addEventListener('mousewheel', onMouseWheel, false);
 		document.addEventListener('DOMMouseScroll', onMouseWheel, false);
-		document.addEventListener('touchstart', function(e) {this.switchScenes(); }.bind(this), false);
+		document.addEventListener('touchstart', function(e) {
+			if(this._reticle.gazing_object) {
+				var targetScene = this._reticle.gazing_object.target;
+				this.switchScenes(targetScene);
+			}
+
+		}.bind(this), false);
 
 	}
 

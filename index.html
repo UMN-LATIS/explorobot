@@ -29,37 +29,94 @@ body { margin: 0; overflow: hidden; background-color: #000;
 
  <script>
 $(document).ready(function() {
-	lib = new Explorobot({"source":{
-	"bunkhouse-1": {
-		"type": "imageSphere",
-		"image": "R0010149.JPG",
-		"initialRotation": {
-			"x": 0,
-			"y": 0,
-			"z": 0
-		},
-		"exits": [
-			{
-				"target": "bunkhouse-2",
-				"position": {
-					"lon": 90,
-					"lat": 0
-				}
-			}
-		]
-	},
-	"bunkhouse-2": {
-		"type": "imageSphere",
-		"image": "R0010151.JPG",
-		"initialRotation": {
-			"x": 0,
-			"y": 0,
-			"z": 0
-		}
-	}
-
-},
-"initialPosition": "bunkhouse-1"
+	lib = new Explorobot({"source": {
+    "bunk1-1": {
+      "type": "imageSphere",
+      "image": "R0010028.JPG",
+      "initialRotation": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "exits": [
+        {
+          "target": "bunk1-2",
+          "position": {
+            "orbit": 80,
+            "height": -3
+          }
+        },
+        {
+          "target": "bunk2-1",
+          "position": {
+            "orbit": -50,
+            "height": -3
+          }
+        }
+      ]
+    },
+    "bunk1-2": {
+      "type": "imageSphere",
+      "image": "R0010029.JPG",
+      "initialRotation": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "exits": [
+        {
+          "target": "bunk1-3",
+          "position": {
+            "orbit": -10,
+            "height": -3
+          }
+        },
+        {
+          "target": "bunk1-1",
+          "position": {
+            "orbit": -90,
+            "height": -3
+          }
+        }
+      ]
+    },
+    "bunk1-3": {
+      "type": "imageSphere",
+      "image": "R0010030.JPG",
+      "initialRotation": {
+        "x": 0,
+        "y": -90,
+        "z": 0
+      },
+      "exits": [
+        {
+          "target": "bunk1-2",
+          "position": {
+            "orbit": 180,
+            "height": -3
+          }
+        },
+       ]
+    },
+    "bunk2-1": {
+    	"type": "imageSphere",
+    	"image": "R0010033.JPG",
+    	"initialRotation": {
+    		"y": 270,
+    		"x":0,
+    		"z":0
+    	},
+    	"exits": [
+    	{
+    		"target": "bunk1-1",
+    		"position": {
+    			"orbit": 150,
+    			"height": -3
+    		}
+    	}]
+    }
+  },
+"initialPosition": "bunk1-1"
 
 });
 });
