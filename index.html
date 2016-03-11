@@ -29,7 +29,39 @@ body { margin: 0; overflow: hidden; background-color: #000;
 
  <script>
 $(document).ready(function() {
-	lib = new Explorobot({"source":{"scene":"scene2"}});
+	lib = new Explorobot({"source":{
+	"bunkhouse-1": {
+		"type": "imageSphere",
+		"image": "R0010149.JPG",
+		"initialRotation": {
+			"x": 0,
+			"y": 0,
+			"z": 0
+		},
+		"exits": [
+			{
+				"target": "bunkhouse-2",
+				"position": {
+					"lon": 90,
+					"lat": 0
+				}
+			}
+		]
+	},
+	"bunkhouse-2": {
+		"type": "imageSphere",
+		"image": "R0010151.JPG",
+		"initialRotation": {
+			"x": 0,
+			"y": 0,
+			"z": 0
+		}
+	}
+
+},
+"initialPosition": "bunkhouse-1"
+
+});
 });
 
  </script>

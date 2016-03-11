@@ -10,7 +10,10 @@ var ExploroSphere = require("./ExploroSphere.js");
 export default class Explorobot {
 	constructor(config) {
 		this._sceneDefinition = null;
-		this._initialScene = null;
+		if(typeof config.initialPosition !== 'undefined') {
+			this._initialScene = config.initialPosition;
+		}
+
 
 		this.setupVR($("body").get(0)); // this is pointless ATM because webvrmanager forces full window
 		this.registerControls();
@@ -23,6 +26,7 @@ export default class Explorobot {
 				});
 			}
 			else if (config.source && typeof config.source === 'object') {
+				this._sceneDefinition = config.source;
 				this.startScene();
 			}
 
@@ -31,7 +35,10 @@ export default class Explorobot {
 	}
 
 	startScene() {
-		var object = this.loadPosition('R0010149.JPG');
+
+		var startScene = this._sceneDefinition[this._initialScene];
+
+		var object = this.loadPosition(startScene.image);
 		this.currentTarget = object;
 
 		this.currentTarget.addToScene(this._scene);
@@ -49,8 +56,10 @@ export default class Explorobot {
 		if(targetScene === null) {
 			console.log(this._reticle.gazing_object);
 		}
+		console.log(this._sceneDefinition);
+		var startScene = this._sceneDefinition['bunkhouse-2'];
 
-		var newSphere = this.loadPosition('R0010152.JPG');
+		var newSphere = this.loadPosition(startScene.image);
 		var oldSphere = this.currentTarget;
 
 		newSphere.setOpacity(0, false);
