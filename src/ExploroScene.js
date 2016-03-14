@@ -15,12 +15,13 @@ export default class ExploroScene {
 
 	setOpacity(opacity=1, tween=true, completionCallback=function() {}) {
 		this.objectArray.forEach(function(value) {
-			if(tween) {
-				new TWEEN.Tween( value.material ).to( { opacity: opacity }, 1000 ).onComplete(completionCallback).start();
-			}
-			else {
+			// if(tween) {
+			// 	new TWEEN.Tween( value.material ).to( { opacity: opacity }, 1000 ).onComplete(completionCallback).start();
+			// }
+			// else {
 				value.material.opacity = opacity;
-			}
+				completionCallback();
+			// }
 
 		});
 
@@ -35,6 +36,11 @@ export default class ExploroScene {
 	removeFromScene(scene) {
 		this.objects.forEach(function(value) {
 			scene.remove(value);
+
+ 			value.material.map.dispose();
+    		value.geometry.dispose();
+    		value.material.dispose();
+    		value=null;
 		});
 	}
 
