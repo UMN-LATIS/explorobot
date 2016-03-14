@@ -61,12 +61,25 @@ export default class Explorobot {
 		newSphere.setOpacity(0, false);
 		newSphere.addToScene(this._scene);
 
-		oldSphere.setOpacity(0, true, function() { oldSphere.removeFromScene(this._scene)}.bind(this));
+		oldSphere.setOpacity(0, true, function() {
+			oldSphere.removeFromScene(this._scene)
+		}.bind(this));
+
+
+		oldSphere.objects.forEach(function(value) {
+			if(!value.hasOwnProperty('target')) {
+				return;
+			}
+			this._eventsHandler.removeEventListener(value, 'click');
+		}, this);
+
 		newSphere.setOpacity(1);
+
 
 		this.previousTarget = this.currentTarget;
 		this.currentTarget = newSphere;
 		this.updateControls();
+
 	}
 
 	setupVR(targetElement) {
@@ -74,9 +87,9 @@ export default class Explorobot {
 		var width  = window.width,
 		height = window.height;
 		this._scene = new THREE.Scene();
+
 		this._camera = new THREE.PerspectiveCamera(75, width / height, 0.3, 1000);
 		this._reticle = vreticle.Reticle(this._camera);
-
 
 		this._renderer = new THREE.WebGLRenderer({antialias: true});
 		this._renderer.setPixelRatio(window.devicePixelRatio);
@@ -105,24 +118,33 @@ export default class Explorobot {
 			TWEEN.update();
 		};
 		animate();
+		this._eventsHandler  = new THREEx.DomEvents(this._camera, this._renderer.domElement)
 
 	}
 
 	updateControls() {
 
-		var eventsHandler  = new THREEx.DomEvents(this._camera, this._renderer.domElement)
 
 		this.currentTarget.objects.forEach(function(value) {
+			if(!value.hasOwnProperty('target')) {
+				return;
+			}
 			this._reticle.add_collider(value);
-			eventsHandler.addEventListener(value, 'click', function(e) {
+			if(value.hasOwnProperty('target')) {
+				this.preload(value.target);
+			}
+			this._eventsHandler.addEventListener(value, 'click', function(e) {
 				var targetMesh = e.target;
 				var targetScene = targetMesh.target;
 				this.switchScenes(targetScene);
 			}.bind(this));
 
 		}, this);
+	}
 
-
+	preload(targetScene) {
+		var startScene = this._sceneDefinition[targetScene];
+		var newSphere = this.loadPosition(startScene);
 	}
 
 	registerControls() {
