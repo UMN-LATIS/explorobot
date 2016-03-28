@@ -7,6 +7,9 @@
 	<script type="text/javascript" src="node_modules/three/examples/js/controls/VRControls.js"></script>
 	<script type="text/javascript" src="node_modules/three/examples/js/effects/VREffect.js"></script>
 	<script type="text/javascript" src="node_modules/three/examples/js/renderers/Projector.js"></script>
+	<script type="text/javascript" src="node_modules/three/examples/js/loaders/MTLLoader.js"></script>
+	<script type="text/javascript" src="node_modules/three/examples/js/loaders/OBJLoader.js"></script>
+	<script type="text/javascript" src="node_modules/three/examples/js/loaders/OBJMTLLoader.js"></script>
 	<script type="text/javascript" src="node_modules/threex.domevents/threex.domevents.js"></script>
 	<script type="text/javascript" src="lib/explorobot.js"></script>
 <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, shrink-to-fit=no">
@@ -29,96 +32,7 @@ body { margin: 0; overflow: hidden; background-color: #000;
 
  <script>
 $(document).ready(function() {
-	lib = new Explorobot({"source": {
-    "bunk1-1": {
-      "type": "imageSphere",
-      "image": "R0010028.JPG",
-      "initialRotation": {
-        "x": 0,
-        "y": 0,
-        "z": 0
-      },
-      "exits": [
-        {
-          "target": "bunk1-2",
-          "position": {
-            "orbit": 80,
-            "height": -3
-          }
-        },
-        {
-          "target": "bunk2-1",
-          "position": {
-            "orbit": -50,
-            "height": -3
-          }
-        }
-      ]
-    },
-    "bunk1-2": {
-      "type": "imageSphere",
-      "image": "R0010029.JPG",
-      "initialRotation": {
-        "x": 0,
-        "y": 0,
-        "z": 0
-      },
-      "exits": [
-        {
-          "target": "bunk1-3",
-          "position": {
-            "orbit": -10,
-            "height": -3
-          }
-        },
-        {
-          "target": "bunk1-1",
-          "position": {
-            "orbit": -90,
-            "height": -3
-          }
-        }
-      ]
-    },
-    "bunk1-3": {
-      "type": "imageSphere",
-      "image": "R0010030.JPG",
-      "initialRotation": {
-        "x": 0,
-        "y": -90,
-        "z": 0
-      },
-      "exits": [
-        {
-          "target": "bunk1-2",
-          "position": {
-            "orbit": 180,
-            "height": -3
-          }
-        },
-       ]
-    },
-    "bunk2-1": {
-    	"type": "imageSphere",
-    	"image": "R0010033.JPG",
-    	"initialRotation": {
-    		"y": 270,
-    		"x":0,
-    		"z":0
-    	},
-    	"exits": [
-    	{
-    		"target": "bunk1-1",
-    		"position": {
-    			"orbit": 150,
-    			"height": -3
-    		}
-    	}]
-    }
-  },
-"initialPosition": "bunk1-1"
-
-});
+	lib = new Explorobot({"source":"source.json","initialPosition": "bladecore-1"});
 });
 
  </script>

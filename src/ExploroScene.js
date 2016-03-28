@@ -20,15 +20,16 @@ export default class ExploroScene {
 			// }
 			// else {
 				value.material.opacity = opacity;
-				completionCallback();
+
 			// }
 
 		});
-
+		completionCallback();
 	}
 
 	addToScene(scene) {
 		this.objects.forEach(function(value) {
+			console.log(value);
 			scene.add(value);
 		});
 	}
@@ -36,7 +37,6 @@ export default class ExploroScene {
 	removeFromScene(scene) {
 		this.objects.forEach(function(value) {
 			scene.remove(value);
-
  			value.material.map.dispose();
     		value.geometry.dispose();
     		value.material.dispose();
@@ -44,9 +44,16 @@ export default class ExploroScene {
 		});
 	}
 
-	buildExit(exit) {
+	destroy() {
+		this.objectArray = [];
+	}
 
-		var texture = THREE.ImageUtils.loadTexture('arrow.png');
+	animate() {
+
+	}
+
+	buildExit(exit, texture, rotation) {
+		var texture = new THREE.TextureLoader().load(texture);
 		var geometry = new THREE.PlaneGeometry(1.6, 1.6);
 		var material = new THREE.MeshBasicMaterial({map: texture});
 		material.transparent = true;
@@ -56,16 +63,13 @@ export default class ExploroScene {
 		var cube = new THREE.Mesh(geometry, material);
 		cube.receiveShadow = false;
 		cube.name="exit";
-		cube.target = exit.target;
+		cube.targetScene = exit.target;
 
 		cube.rotateY(window.degree2radian(exit.position.orbit));
-		cube.rotateX(window.degree2radian(-100));
+		cube.rotateX(window.degree2radian(rotation));
 		cube.position.x = Math.sin(window.degree2radian(exit.position.orbit)) * -3;
 		cube.position.z = Math.cos(window.degree2radian(exit.position.orbit)) * -3;
-
 		cube.position.y = exit.position.height;
-
-
 		return cube;
 	}
 

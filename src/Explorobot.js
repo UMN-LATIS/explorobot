@@ -5,7 +5,9 @@ var TWEEN = require('tween.js');
 
 require('webvr-boilerplate');
 
-var ExploroSphere = require("./ExploroSphere.js");
+window["ExploroSphere"] = require("./ExploroSphere.js");
+window["ExploroPlane"] = require("./ExploroPlane.js");
+window["ExploroObject"] = require("./ExploroObject.js");
 
 export default class Explorobot {
 	constructor(config) {
@@ -23,7 +25,7 @@ export default class Explorobot {
 				$.getJSON(config.source, {}, function(json, textStatus) {
 					this._sceneDefinition = json;
 					this.startScene();
-				});
+				}.bind(this));
 			}
 			else if (config.source && typeof config.source === 'object') {
 				this._sceneDefinition = config.source;
@@ -35,19 +37,29 @@ export default class Explorobot {
 	}
 
 	startScene() {
-
 		var startScene = this._sceneDefinition[this._initialScene];
 
 		var object = this.loadPosition(startScene);
 		this.currentTarget = object;
 
-		this.currentTarget.addToScene(this._scene);
-		this.updateControls();
+
+		var finishLoading = function() {
+			console.log("fire");
+			this.currentTarget.addToScene(this._scene);
+			this.updateControls();
+		}.bind(this);
+
+		if(this.currentTarget.loading) {
+			this.loadingTimer = window.setInterval(function() { if(!this.currentTarget.loading) { finishLoading(); clearInterval(this.loadingTimer)}}.bind(this), 1000);
+		}
+		else {
+			finishLoading();
+		}
 
 	}
 
-	loadPosition(sphereId) {
-		var target = new ExploroSphere(sphereId);
+	loadPosition(sphere) {
+		var target = new window[sphere.type](sphere);
 		return target;
 	}
 
@@ -67,14 +79,28 @@ export default class Explorobot {
 
 
 		oldSphere.objects.forEach(function(value) {
-			if(!value.hasOwnProperty('target')) {
+			if(!value.hasOwnProperty('targetScene')) {
 				return;
 			}
 			this._eventsHandler.removeEventListener(value, 'click');
+			this._eventsHandler.removeEventListener(value, 'touchstart');
+			value = null;
 		}, this);
 
-		newSphere.setOpacity(1);
+		oldSphere.destroy();
+		oldSphere = null;
 
+		newSphere.setOpacity(1, false, function() {
+			console.log("hey");
+		});
+
+		console.log(newSphere);
+
+		if(startScene.hasOwnProperty('resetCamera') && startScene.resetCamera === true) {
+			this._camera.rotation.x = 0;
+			this._camera.rotation.y = 0;
+			this._camera.rotation.z = 0;
+		}
 
 		this.previousTarget = this.currentTarget;
 		this.currentTarget = newSphere;
@@ -84,36 +110,43 @@ export default class Explorobot {
 
 	setupVR(targetElement) {
 
-		var width  = window.width,
-		height = window.height;
+		var width  = window.innerWidth,
+		height = window.innerHeight;
 		this._scene = new THREE.Scene();
 
 		this._camera = new THREE.PerspectiveCamera(75, width / height, 0.3, 1000);
 		this._reticle = vreticle.Reticle(this._camera);
+		this._camera.position.x = 0.1;
+
+		this._scene.add( new THREE.PointLight( 0xffffff, 1,0 ) );
 
 		this._renderer = new THREE.WebGLRenderer({antialias: true});
 		this._renderer.setPixelRatio(window.devicePixelRatio);
 
-		this._renderer.setSize(width, height, true);
+		// this._renderer.setSize(width, height, true);
 
 		// Apply VR stereo rendering to renderer.
-		var effect = new THREE.VREffect(this._renderer);
-		effect.setSize(width, height);
+		this._effect = new THREE.VREffect(this._renderer);
+		this._effect.setSize(width, height);
 
 		// Create a VR manager helper to enter and exit VR mode.
 		var params = {
 			hideButton: false, // Default: false.
 			isUndistorted: false // Default: false.
 		};
-		var manager = new WebVRManager(this._renderer, effect, params);
+		this._manager = new WebVRManager(this._renderer, this._effect, params);
 
 		var controls = new THREE.VRControls(this._camera);
 		targetElement.appendChild(this._renderer.domElement);
 
 		var animate = (timestamp) => {
 			controls.update();
-			manager.render(this._scene, this._camera, timestamp);
+			this._manager.render(this._scene, this._camera, timestamp);
 			this._reticle.reticle_loop();
+			if(this.currentTarget) {
+				this.currentTarget.animate();
+			}
+
 			requestAnimationFrame(animate);
 			TWEEN.update();
 		};
@@ -126,18 +159,20 @@ export default class Explorobot {
 
 
 		this.currentTarget.objects.forEach(function(value) {
-			if(!value.hasOwnProperty('target')) {
+			if(!value.hasOwnProperty('targetScene')) {
 				return;
 			}
 			this._reticle.add_collider(value);
-			if(value.hasOwnProperty('target')) {
-				this.preload(value.target);
+			if(value.hasOwnProperty('targetScene')) {
+				this.preload(value.targetScene);
 			}
-			this._eventsHandler.addEventListener(value, 'click', function(e) {
-				var targetMesh = e.target;
-				var targetScene = targetMesh.target;
+			var handler = function(e) {
+				var targetMesh = e.targetScene;
+				var targetScene = targetMesh.targetScene;
 				this.switchScenes(targetScene);
-			}.bind(this));
+			}.bind(this);
+			this._eventsHandler.addEventListener(value, 'click', handler);
+			this._eventsHandler.addEventListener(value, 'touchstart', handler);
 
 		}, this);
 	}
@@ -164,8 +199,11 @@ export default class Explorobot {
 		document.addEventListener('mousewheel', onMouseWheel, false);
 		document.addEventListener('DOMMouseScroll', onMouseWheel, false);
 		document.addEventListener('touchstart', function(e) {
+			if(!this._manager.isVRMode()) {
+				return;
+			}
 			if(this._reticle.gazing_object) {
-				var targetScene = this._reticle.gazing_object.target;
+				var targetScene = this._reticle.gazing_object.targetScene;
 				this.switchScenes(targetScene);
 			}
 
