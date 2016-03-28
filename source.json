@@ -1,0 +1,360 @@
+{
+  "map-1": {
+    "type": "ExploroPlane",
+    "image": "map.png",
+    "width": 8,
+    "height": 5,
+    "resetCamera": true,
+    "initialRotation": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "exits": [
+      {
+        "target": "bunk1-1",
+        "position": {
+          "orbit": 40,
+          "height": 0
+        }
+      },
+      {
+        "target": "bunk2-1",
+        "position": {
+          "orbit": 10,
+          "height": 0.4
+        }
+      },
+      {
+        "target": "bunk3-1",
+        "position": {
+          "orbit": -20,
+          "height": 1.1
+        }
+      }
+    ]
+  },
+   "bladecore-1": {
+    "type": "ExploroObject",
+    "image": "blade_core",
+    "resetCamera": true,
+    "initialRotation": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    }
+  },
+  "bunk1-1": {
+    "type": "ExploroSphere",
+    "image": "R0010028.JPG",
+    "initialRotation": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "exits": [
+      {
+        "target": "bunk1-2",
+        "position": {
+          "orbit": 80,
+          "height": -3
+        }
+      },
+      {
+        "target": "bunk2-1",
+        "position": {
+          "orbit": -50,
+          "height": -3
+        }
+      }
+    ]
+  },
+  "bunk1-2": {
+    "type": "ExploroSphere",
+    "image": "R0010029.JPG",
+    "initialRotation": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "exits": [
+      {
+        "target": "bunk1-3",
+        "position": {
+          "orbit": -10,
+          "height": -3
+        }
+      },
+      {
+        "target": "bunk1-1",
+        "position": {
+          "orbit": -90,
+          "height": -3
+        }
+      }
+    ]
+  },
+  "bunk1-3": {
+    "type": "ExploroSphere",
+    "image": "R0010030.JPG",
+    "initialRotation": {
+      "x": 0,
+      "y": -90,
+      "z": 0
+    },
+    "exits": [
+      {
+        "target": "bunk1-2",
+        "position": {
+          "orbit": 180,
+          "height": -3
+        }
+      }
+    ]
+  },
+  "bunk2-1": {
+    "type": "ExploroSphere",
+    "image": "R0010033.JPG",
+    "initialRotation": {
+      "y": 270,
+      "x": 0,
+      "z": 0
+    },
+    "exits": [
+      {
+        "target": "bunk1-1",
+        "position": {
+          "orbit": 150,
+          "height": -3
+        }
+      },
+      {
+      "target": "bunk2-2",
+        "position": {
+          "orbit": 40,
+          "height": -3
+        }
+      },
+      {
+        "target": "hall-1",
+        "position": {
+          "orbit": -30,
+          "height": -3
+        }
+      }
+    ]
+  },
+  "bunk2-2": {
+    "type": "ExploroSphere",
+    "image": "R0010035.JPG",
+    "initialRotation": {
+      "y": 270,
+      "x": 0,
+      "z": 10
+    },
+    "exits": [
+      {
+        "target": "bunk2-1",
+        "position": {
+          "orbit": 240,
+          "height": -3
+        }
+      },
+      {
+        "target": "bunk2-3",
+        "position": {
+          "orbit": 70,
+          "height": -3
+        }
+      }
+    ]
+  },
+  "bunk2-3": {
+    "type": "ExploroSphere",
+    "image": "R0010038-retouched.JPG",
+    "initialRotation": {
+      "y": 270,
+      "x": 0,
+      "z": 0
+    },
+    "exits": [
+      {
+        "target": "bunk2-2",
+        "position": {
+          "orbit": 220,
+          "height": -3
+        }
+      }
+    ]
+  },
+  "hall-1": {
+    "type": "ExploroSphere",
+    "image": "R0010046.JPG",
+    "initialRotation": {
+      "y": 270,
+      "x": 0,
+      "z": 0
+    },
+    "exits": [
+      {
+        "target": "bunk2-1",
+        "position": {
+          "orbit": 180,
+          "height": -3
+        }
+      },
+      {
+        "target": "bunk3-1",
+        "position": {
+          "orbit": 60,
+          "height": -3
+        }
+      },
+      {
+        "target": "outside1-1",
+        "position": {
+          "orbit": 210,
+          "height": -3
+        }
+      }
+    ]
+  },
+  "bunk3-1": {
+    "type": "ExploroSphere",
+    "image": "R0010048.JPG",
+    "initialRotation": {
+      "y": 270,
+      "x": 0,
+      "z": 0
+    },
+    "exits": [
+      {
+        "target": "bunk3-2",
+        "position": {
+          "orbit": 50,
+          "height": -3
+        }
+      },
+      {
+        "target": "hall-1",
+        "position": {
+          "orbit": 130,
+          "height": -3
+        }
+      },
+      {
+        "target": "bunk3-3",
+        "position": {
+          "orbit": 310,
+          "height": -3
+        }
+      }
+    ]
+  },
+  "bunk3-2": {
+    "type": "ExploroSphere",
+    "image": "R0010052.JPG",
+    "initialRotation": {
+      "y": 290,
+      "x": 0,
+      "z": 0
+    },
+    "exits": [
+      {
+        "target": "bunk3-1",
+        "position": {
+          "orbit": 150,
+          "height": -3
+        }
+      }
+    ]
+  }
+  ,
+  "bunk3-3": {
+    "type": "ExploroSphere",
+    "image": "R0010054.JPG",
+    "initialRotation": {
+      "y": 200,
+      "x": 0,
+      "z": 0
+    },
+    "exits": [
+      {
+        "target": "bunk3-1",
+        "position": {
+          "orbit": 150,
+          "height": -3
+        }
+      }
+    ]
+  }
+  ,
+  "outside1-1": {
+    "type": "ExploroSphere",
+    "image": "R0010057.JPG",
+    "initialRotation": {
+      "y": 270,
+      "x": 0,
+      "z": 0
+    },
+    "exits": [
+      {
+        "target": "hall-1",
+        "position": {
+          "orbit": 5,
+          "height": -3
+        }
+      },
+      {
+        "target": "outside1-2",
+        "position": {
+          "orbit": 180,
+          "height": -3
+        }
+      }
+    ]
+  },
+  "outside1-2": {
+    "type": "ExploroSphere",
+    "image": "outside1-2.jpg",
+    "initialRotation": {
+      "y": 270,
+      "x": 0,
+      "z": 0
+    },
+    "exits": [
+      {
+        "target": "outside1-1",
+        "position": {
+          "orbit": 0,
+          "height": -3
+        }
+      },
+      {
+        "target": "outside1-3",
+        "position": {
+          "orbit": 180,
+          "height": -3
+        }
+      }
+    ]
+  },
+  "outside1-3": {
+    "type": "ExploroSphere",
+    "image": "R0010064.JPG",
+    "initialRotation": {
+      "y": 180,
+      "x": 0,
+      "z": 0
+    },
+    "exits": [
+      {
+        "target": "outside1-2",
+        "position": {
+          "orbit": 5,
+          "height": -3
+        }
+      }
+    ]
+  }
+}
