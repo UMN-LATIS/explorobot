@@ -7,10 +7,18 @@ export default class ExploroSphere extends ExploroScene {
 		super(config);
 		this.loading = false;
 		var targetItem = config.image;
+		var texture;
+		if(typeof window["texture"][targetItem] !== 'undefined') {
+			texture = window["texture"][targetItem];
+		}
+		else {
+			texture = new THREE.TextureLoader().load('images/' + targetItem);
+		}
+
 		var sphere = new THREE.Mesh(
-			new THREE.SphereGeometry(100, 100, 20),
+			new THREE.SphereGeometry(100, 50, 20),
 			new THREE.MeshBasicMaterial({
-				map: new THREE.TextureLoader().load('images/' + targetItem)
+				map: texture
 			})
 		);
 		sphere.scale.x = -1;

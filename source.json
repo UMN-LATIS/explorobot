@@ -4,7 +4,6 @@
     "image": "map.png",
     "width": 8,
     "height": 5,
-    "resetCamera": true,
     "initialRotation": {
       "x": 0,
       "y": 0,
@@ -33,16 +32,6 @@
         }
       }
     ]
-  },
-   "bladecore-1": {
-    "type": "ExploroObject",
-    "image": "blade_core",
-    "resetCamera": true,
-    "initialRotation": {
-      "x": 0,
-      "y": 0,
-      "z": 0
-    }
   },
   "bunk1-1": {
     "type": "ExploroSphere",
@@ -166,6 +155,13 @@
           "orbit": 70,
           "height": -3
         }
+      },
+      {
+        "target": "table-1",
+        "position": {
+          "orbit": -10,
+          "height": -3
+        }
       }
     ]
   },
@@ -182,6 +178,61 @@
         "target": "bunk2-2",
         "position": {
           "orbit": 220,
+          "height": -3
+        }
+      }
+    ]
+  },
+  "table-1": {
+    "type": "ExploroPlane",
+    "image": "IMG_0239.png",
+    "audio": "granniesthemesong.mp3",
+    "width": 6.666,
+    "height": 5,
+    "exits": [
+      {
+        "target": "bunk2-2",
+        "position": {
+          "orbit": 280,
+          "height": -3
+        }
+      },
+      {
+        "target": "bunk2-2",
+        "position": {
+          "orbit": 70,
+          "height": -3
+        }
+      },
+      {
+        "target": "bladecore-1",
+        "position": {
+          "orbit": 0,
+          "height": 0
+        }
+      }
+    ]
+  },
+  "bladecore-1": {
+    "type": "ExploroObject",
+    "image": "blade_core",
+    "initialRotation": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "exits": [
+      {
+        "target": "table-1",
+        "position": {
+          "orbit": 280,
+          "height": -3
+        }
+      },
+      {
+        "target": "table-1",
+        "position": {
+          "orbit": 70,
           "height": -3
         }
       }

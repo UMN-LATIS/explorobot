@@ -11,9 +11,10 @@ window["ExploroObject"] = require("./ExploroObject.js");
 
 export default class Explorobot {
 	constructor(config) {
+		window["texture"] = {};	
 		this._sceneDefinition = null;
-		if(typeof config.initialPosition !== 'undefined') {
-			this._initialScene = config.initialPosition;
+		if(typeof config.initialScene !== 'undefined') {
+			this._initialScene = config.initialScene;
 		}
 
 
@@ -63,15 +64,23 @@ export default class Explorobot {
 		return target;
 	}
 
+	preloadPosition(targetScene) {
+		var sphere = this._sceneDefinition[targetScene];
+		if(sphere.hasOwnProperty("image")) {
+			var texture = sphere.image;
+			window["texture"][texture] = new THREE.TextureLoader().load('images/' + texture);
+		}
+	}
+
 	switchScenes(targetScene = null) {
 
 		var startScene = this._sceneDefinition[targetScene];
-
+		console.log(startScene);
 		var newSphere = this.loadPosition(startScene);
 		var oldSphere = this.currentTarget;
 
 		newSphere.setOpacity(0, false);
-		newSphere.addToScene(this._scene);
+		// newSphere.addToScene(this._scene);
 
 		oldSphere.setOpacity(0, true, function() {
 			oldSphere.removeFromScene(this._scene)
@@ -82,6 +91,7 @@ export default class Explorobot {
 			if(!value.hasOwnProperty('targetScene')) {
 				return;
 			}
+
 			this._eventsHandler.removeEventListener(value, 'click');
 			this._eventsHandler.removeEventListener(value, 'touchstart');
 			value = null;
@@ -96,16 +106,22 @@ export default class Explorobot {
 
 		console.log(newSphere);
 
-		if(startScene.hasOwnProperty('resetCamera') && startScene.resetCamera === true) {
-			this._camera.rotation.x = 0;
-			this._camera.rotation.y = 0;
-			this._camera.rotation.z = 0;
-		}
-
+		
 		this.previousTarget = this.currentTarget;
 		this.currentTarget = newSphere;
-		this.updateControls();
 
+		var finishLoading = function() {
+			console.log("fire");
+			this.currentTarget.addToScene(this._scene);
+			this.updateControls();
+		}.bind(this);
+
+		if(this.currentTarget.loading) {
+			this.loadingTimer = window.setInterval(function() { if(!this.currentTarget.loading) { finishLoading(); clearInterval(this.loadingTimer)}}.bind(this), 1000);
+		}
+		else {
+			finishLoading();
+		}
 	}
 
 	setupVR(targetElement) {
@@ -116,9 +132,9 @@ export default class Explorobot {
 
 		this._camera = new THREE.PerspectiveCamera(75, width / height, 0.3, 1000);
 		this._reticle = vreticle.Reticle(this._camera);
-		this._camera.position.x = 0.1;
+		this._camera.position.x = 0.0;
 
-		this._scene.add( new THREE.PointLight( 0xffffff, 1,0 ) );
+		this._scene.add( new THREE.PointLight( 0xffffff, 1.2,0,0 ) );
 
 		this._renderer = new THREE.WebGLRenderer({antialias: true});
 		this._renderer.setPixelRatio(window.devicePixelRatio);
@@ -136,11 +152,10 @@ export default class Explorobot {
 		};
 		this._manager = new WebVRManager(this._renderer, this._effect, params);
 
-		var controls = new THREE.VRControls(this._camera);
+		this._controls = new THREE.VRControls(this._camera);
 		targetElement.appendChild(this._renderer.domElement);
-
 		var animate = (timestamp) => {
-			controls.update();
+			this._controls.update();
 			this._manager.render(this._scene, this._camera, timestamp);
 			this._reticle.reticle_loop();
 			if(this.currentTarget) {
@@ -164,10 +179,11 @@ export default class Explorobot {
 			}
 			this._reticle.add_collider(value);
 			if(value.hasOwnProperty('targetScene')) {
-				this.preload(value.targetScene);
+				this.preloadPosition(value.targetScene);
 			}
 			var handler = function(e) {
-				var targetMesh = e.targetScene;
+				console.log(e);
+				var targetMesh = e.target;
 				var targetScene = targetMesh.targetScene;
 				this.switchScenes(targetScene);
 			}.bind(this);
@@ -177,10 +193,6 @@ export default class Explorobot {
 		}, this);
 	}
 
-	preload(targetScene) {
-		var startScene = this._sceneDefinition[targetScene];
-		var newSphere = this.loadPosition(startScene);
-	}
 
 	registerControls() {
 		var onMouseWheel = (event) => {

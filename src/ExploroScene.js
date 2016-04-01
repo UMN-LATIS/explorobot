@@ -2,7 +2,17 @@ var TWEEN = require('tween.js');
 
 export default class ExploroScene {
 	constructor(config) {
-		this.objectArray = new Array();
+		this.objectArray = [];
+		createjs.Sound.stop("sound");
+		if(config.hasOwnProperty("audio")) {
+			var audio = config.audio;
+ 			createjs.Sound.on("fileload", function(event) {
+ 				var instance = createjs.Sound.play("sound");  // play using id.  Could also use full sourcepath or event.src.
+     			// instance.volume = 0.5;
+     		}, this);
+ 			createjs.Sound.registerSound("audio/" + audio, "sound");
+ 		}
+
 	}
 
 	addObject(object) {
@@ -19,7 +29,10 @@ export default class ExploroScene {
 			// 	new TWEEN.Tween( value.material ).to( { opacity: opacity }, 1000 ).onComplete(completionCallback).start();
 			// }
 			// else {
-				value.material.opacity = opacity;
+				if(typeof value.material !== 'undefined' && typeof value.material.opacity !== 'undefined') {
+					value.material.opacity = opacity;	
+				}
+				
 
 			// }
 
@@ -37,9 +50,16 @@ export default class ExploroScene {
 	removeFromScene(scene) {
 		this.objects.forEach(function(value) {
 			scene.remove(value);
- 			value.material.map.dispose();
-    		value.geometry.dispose();
-    		value.material.dispose();
+			if(typeof value.material !== 'undefined') {
+				value.material.map.dispose();	
+				value.material.dispose();
+			}
+ 			
+ 			if(typeof value.geometry !== 'undefined') {
+ 				value.geometry.dispose();	
+ 			}
+    		
+    		
     		value=null;
 		});
 	}
@@ -53,9 +73,9 @@ export default class ExploroScene {
 	}
 
 	buildExit(exit, texture, rotation) {
-		var texture = new THREE.TextureLoader().load(texture);
+		var loadedTexture = new THREE.TextureLoader().load(texture);
 		var geometry = new THREE.PlaneGeometry(1.6, 1.6);
-		var material = new THREE.MeshBasicMaterial({map: texture});
+		var material = new THREE.MeshBasicMaterial({map: loadedTexture});
 		material.transparent = true;
 		material.opacity = 1;
 		material.alphaTest = 0.8;
@@ -64,7 +84,6 @@ export default class ExploroScene {
 		cube.receiveShadow = false;
 		cube.name="exit";
 		cube.targetScene = exit.target;
-
 		cube.rotateY(window.degree2radian(exit.position.orbit));
 		cube.rotateX(window.degree2radian(rotation));
 		cube.position.x = Math.sin(window.degree2radian(exit.position.orbit)) * -3;

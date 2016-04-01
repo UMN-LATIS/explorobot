@@ -12,6 +12,7 @@
 	<script type="text/javascript" src="node_modules/three/examples/js/loaders/OBJMTLLoader.js"></script>
 	<script type="text/javascript" src="node_modules/threex.domevents/threex.domevents.js"></script>
 	<script type="text/javascript" src="lib/explorobot.js"></script>
+	<script src="https://code.createjs.com/soundjs-0.6.2.min.js"></script>
 <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, shrink-to-fit=no">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,7 +33,7 @@ body { margin: 0; overflow: hidden; background-color: #000;
 
  <script>
 $(document).ready(function() {
-	lib = new Explorobot({"source":"source.json","initialPosition": "bladecore-1"});
+	lib = new Explorobot({"source":"source.json","initialScene": "map-1"});
 });
 
  </script>
