@@ -1,0 +1,10 @@
+Explorobot
+=============
+
+Explorobot is an experimental project to look at options for building "VR" walkthroughs.  It's targetted primarily at users working with Google Cardboard-style VR headsets, though it should work with more advanced headsets as well.
+
+In theory, you should be able to install using "npm install" and then "npm run dev".  In practice, there'll probably be some JS-package-messiness.
+
+The tool will build a walkthrough based on the content of "source.json," which describes a series of scenes.  Each scene can be either a spherical photo, a 3d object, or a 2d plane.  We'll also be adding support for spherical videos, though that's currently limited on iOS.  Each scene defines a series of exits - places you can travel to from the scene.  The mode of interaction assumes you have only the single google cardboard button, so depends on gaze detection to know where to assign touch events.
+
+This is very much a prototype application, but there may be useful ideas.  Visit [labs.dash.umn.edu](http://labs.dash.umn.edu) to learn more about what we're doing.

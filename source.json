@@ -186,7 +186,6 @@
   "table-1": {
     "type": "ExploroPlane",
     "image": "IMG_0239.png",
-    "audio": "granniesthemesong.mp3",
     "width": 6.666,
     "height": 5,
     "exits": [
@@ -202,13 +201,6 @@
         "position": {
           "orbit": 70,
           "height": -3
-        }
-      },
-      {
-        "target": "bladecore-1",
-        "position": {
-          "orbit": 0,
-          "height": 0
         }
       }
     ]
